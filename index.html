@@ -188,6 +188,7 @@ nav a{font-size:.7rem;padding:.3rem .5rem}
 <a href="#slash">スラッシュ</a>
 <a href="#shortcuts">ショートカット</a>
 <a href="#tips">コツ</a>
+<a href="#smartphone">スマホ</a>
 <a href="#money">お金</a>
 </nav>
 
@@ -728,6 +729,160 @@ Codex が触れる範囲を制限する安全装置でち！<br>
 <div class="tip-card aos"><strong>🇯🇵 日本語でお話しても大丈夫でち！</strong><br>英語がわからなくても、日本語でお願いすればちゃんと理解してくれるでち。「ばぶちゃんでもわかるように教えて」でOKでち。</div>
 </div>
 </section>
+
+<div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- SMARTPHONE -->
+<section id="smartphone" class="section">
+<div class="container">
+<h2 class="sec-title aos">📱 スマホ（iOS）で使う方法でち</h2>
+<p class="sec-sub aos">パソコンがなくても大丈夫！iPhoneでもCodexを使えるでち！</p>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem;border-left:3px solid var(--pri)">
+<p style="font-size:.92rem;line-height:2">
+Codex CLI は本来パソコンのターミナルで動くツールでち。でも、<strong>スマホからでも使える方法がいくつかある</strong>でち！
+</p>
+</div>
+
+<div class="cards">
+
+<div class="card aos">
+<span class="card-icon">💬</span>
+<div class="card-title">① ChatGPT アプリ（いちばん簡単！）</div>
+<div class="card-desc">
+App Store から <strong>ChatGPT アプリ</strong>をダウンロードするでち！<br>
+Plus / Pro プランに入ってれば、アプリ内で <strong>Codex の機能が使える</strong>でち。<br><br>
+<strong>やり方：</strong><br>
+1. ChatGPT アプリを開くでち<br>
+2. モデルを「Codex」に切り替えるでち<br>
+3. 「こういうコード書いて」って頼むだけでち！<br><br>
+ターミナル操作はできないけど、<strong>コード生成・質問・レビュー</strong>はバッチリでち！
+</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">☁️</span>
+<div class="card-title">② GitHub Codespaces（本格派！）</div>
+<div class="card-desc">
+GitHub の <strong>Codespaces</strong> を Safari で開けば、<strong>スマホでもターミナルが使える</strong>でち！<br><br>
+<strong>やり方：</strong><br>
+1. Safari で <strong>github.com</strong> にログインするでち<br>
+2. リポジトリの「Code」→「Codespaces」を選ぶでち<br>
+3. ターミナルで <code>npm i -g @openai/codex</code> → <code>codex</code> でち！<br><br>
+<strong>毎月60時間無料</strong>でち。クラウド上のパソコンを借りるイメージでち！
+</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🌐</span>
+<div class="card-title">③ Codex Cloud（ブラウザだけ！）</div>
+<div class="card-desc">
+Safari などのブラウザから <strong>Codex Cloud</strong> にアクセスするでち！<br><br>
+<strong>やり方：</strong><br>
+1. ブラウザで ChatGPT にログインするでち<br>
+2. Codex Cloud のタスクを作成するでち<br>
+3. 結果はあとでパソコンに <code>codex apply</code> で取り込むでち<br><br>
+外出中に大きなお仕事を投げておいて、あとで回収する使い方が便利でち！
+</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">📲</span>
+<div class="card-title">④ ターミナルアプリ（上級者向け）</div>
+<div class="card-desc">
+iOS 用のターミナルアプリを使う方法もあるでち！<br><br>
+<strong>おすすめアプリ：</strong><br>
+・<strong>a-Shell</strong> → 無料で使えるターミナルでち<br>
+・<strong>iSH</strong> → Linux 環境をエミュレートするでち<br>
+・<strong>Termius</strong> → リモートサーバーに接続するでち<br><br>
+ただしCodex CLI は Rust 製なので、<strong>直接インストールは難しい</strong>でち。リモートサーバーに SSH 接続して使うのが現実的でち。
+</div>
+</div>
+
+</div>
+
+<div class="tip-card aos" style="margin-top:1.5rem"><strong>🏆 ばぶちゃんへのおすすめ</strong><br>
+いちばん簡単なのは <strong>① ChatGPTアプリ</strong> でち！コードを書いてもらうだけならこれで十分でち。<br>
+ファイル操作やGit操作もしたいなら <strong>② GitHub Codespaces</strong> がおすすめでち！</div>
+
+<!-- URL作成セクション -->
+<h2 class="sec-title aos" style="margin-top:3rem">🔗 スマホでURL作成（GitHub Pages）でち</h2>
+<p class="sec-sub aos">スマホだけで自分のWebサイトのURLを作る、いちばん簡単な方法でち！</p>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem;background:linear-gradient(135deg,#E8F5E9,#F1F8E9);border:2px solid #81C784">
+<p style="font-size:.95rem;line-height:2;text-align:center">
+<strong style="font-size:1.1rem">🌟 結論：GitHub Pages がいちばん簡単でち！</strong><br>
+GitHub にファイルを置くだけで、<strong>無料でURLが自動生成</strong>されるでち。<br>
+<code>https://ユーザー名.github.io/リポジトリ名/</code>
+</p>
+</div>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem">
+<p style="font-size:.95rem;font-weight:900;color:var(--pri-d);margin-bottom:.8rem">📲 Step 1：GitHub アカウントを作るでち</p>
+<p style="font-size:.88rem;line-height:1.9">
+1. Safari で <strong>github.com</strong> を開くでち<br>
+2. 「Sign up」をタップして、メール・パスワードを入れるでち<br>
+3. メール認証したら完了でち！<strong>無料</strong>でち！
+</p>
+</div>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem">
+<p style="font-size:.95rem;font-weight:900;color:var(--pri-d);margin-bottom:.8rem">📦 Step 2：リポジトリ（保管箱）を作るでち</p>
+<p style="font-size:.88rem;line-height:1.9">
+1. GitHub の「+」→「New repository」をタップでち<br>
+2. 名前をつけるでち（例：<code>my-site</code>）<br>
+3. 「Public」を選ぶでち（無料で公開するため）<br>
+4. 「Add a README file」にチェックを入れるでち<br>
+5. 「Create repository」をタップでち！
+</p>
+</div>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem">
+<p style="font-size:.95rem;font-weight:900;color:var(--pri-d);margin-bottom:.8rem">📄 Step 3：HTMLファイルをアップロードするでち</p>
+<p style="font-size:.88rem;line-height:1.9">
+1. リポジトリのページで「Add file」→「Upload files」をタップでち<br>
+2. iPhoneの「ファイル」アプリから <code>index.html</code> を選ぶでち<br>
+3. 「Commit changes」をタップでち！<br><br>
+<strong>💡 ファイルがない場合：</strong><br>
+「Add file」→「Create new file」で、<br>
+ファイル名を <code>index.html</code> にして、中身を直接書いてもOKでち！<br>
+ChatGPT アプリにコードを書いてもらって、コピペするのがラクでち！
+</p>
+</div>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem">
+<p style="font-size:.95rem;font-weight:900;color:var(--pri-d);margin-bottom:.8rem">🚀 Step 4：GitHub Pages を有効にするでち</p>
+<p style="font-size:.88rem;line-height:1.9">
+1. リポジトリの「Settings」をタップでち<br>
+2. 左メニューの「Pages」をタップでち<br>
+3. Source を <strong>「Deploy from a branch」</strong> にするでち<br>
+4. Branch を <strong>「main」</strong>、フォルダを <strong>「/ (root)」</strong> にするでち<br>
+5. 「Save」をタップでち！<br><br>
+<strong>1〜2分待つと...</strong>
+</p>
+</div>
+
+<div class="card aos" style="max-width:700px;margin:0 auto 1.5rem;background:linear-gradient(135deg,var(--acc-ll),var(--wh));border:2px solid var(--acc)">
+<p style="font-size:1rem;line-height:2;text-align:center">
+<strong style="font-size:1.2rem">🎉 URLが完成でち！</strong><br><br>
+<code style="font-size:1rem;padding:.5rem 1rem;background:var(--wh);border-radius:8px;display:inline-block">https://ユーザー名.github.io/リポジトリ名/</code><br><br>
+このURLをDiscordやTwitterに貼れば、<br>みんなに見てもらえるでち！<br><br>
+<strong>しかも完全無料</strong>でち！👶✨
+</p>
+</div>
+
+<div class="tip-card aos"><strong>💡 ファイルを更新したい時は？</strong><br>
+GitHub のリポジトリで「index.html」をタップ → 鉛筆マーク（✏️）で編集 → 「Commit changes」で保存するだけでち！<br>
+数分でサイトに反映されるでち。スマホだけで全部できるでち！</div>
+
+<div class="tip-card aos"><strong>📱 GitHub モバイルアプリも便利でち！</strong><br>
+App Store から <strong>GitHub アプリ</strong>をダウンロードすると、ファイル管理がもっとラクになるでち。<br>
+ただし Pages の設定は Safari からやる必要があるでち。</div>
+
+</div>
+</section>
+
+<div class="wave wave-b"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80Z"/></svg></div>
 
 <div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
 
