@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- OGP -->
+<meta property="og:title" content="Codex おべんきょうノート 🍼">
+<meta property="og:description" content="ばぶちゃんでもわかる！OpenAI Codex CLI のやさしいガイドでち 👶">
+<meta property="og:image" content="https://nanashi925.github.io/Chaplin-Claude/ogp.png">
+<meta property="og:url" content="https://nanashi925.github.io/Chaplin-Claude/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Codex おべんきょうノート">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Codex おべんきょうノート 🍼">
+<meta name="twitter:description" content="ばぶちゃんでもわかる！OpenAI Codex CLI のやさしいガイドでち 👶">
+<meta name="twitter:image" content="https://nanashi925.github.io/Chaplin-Claude/ogp.png">
+<title>Codex おべんきょうノート 🍼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--pri:#7EB8DA;--pri-l:#B8E0F7;--pri-d:#5A9BC7;--pri-p:#E8F4FD;
+--acc:#FFB6C1;--acc-l:#FFD1DC;--acc-ll:#FFF0F5;
+--bg:#F0F8FF;--wh:#FFFFFF;
+--tx:#4A6FA5;--tx-l:#8BB0D6;--tx-d:#365480;
+--glass:rgba(255,255,255,.65);--glass-b:rgba(255,255,255,.35);
+--sh:rgba(126,184,218,.18);--sh2:rgba(126,184,218,.35);
+--warn-bg:#FFF8E1;--warn-bd:#FFD93D;--dng:#FF6B6B;
+--rad:18px;--rad-s:12px;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Zen Maru Gothic','Hiragino Maru Gothic Pro',sans-serif;background:var(--bg);color:var(--tx);line-height:1.8;overflow-x:hidden;min-height:100vh;min-height:-webkit-fill-available}
+::selection{background:var(--acc-l);color:var(--tx-d)}
+a{color:var(--pri-d);text-decoration:none}
+/* ===== LOADING ===== */
+#loader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pri-p),var(--wh),var(--acc-ll));transition:opacity .6s,visibility .6s}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loader-bottle{font-size:4rem;animation:loaderBounce 1s ease-in-out infinite}
+.loader-text{margin-top:1rem;font-size:1.1rem;font-weight:700;color:var(--tx-l);animation:loaderPulse 1.2s ease-in-out infinite}
+@keyframes loaderBounce{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-18px) rotate(-10deg)}75%{transform:translateY(-8px) rotate(5deg)}}
+@keyframes loaderPulse{0%,100%{opacity:.4}50%{opacity:1}}
+/* ===== BACKGROUND ===== */
+#bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bubble{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.9),rgba(126,184,218,.15));opacity:0;will-change:transform}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.7}90%{opacity:.5}100%{transform:translateY(-110vh) scale(.6);opacity:0}}
+/* ===== PROGRESS ===== */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--pri),var(--acc));z-index:1001;width:0;transition:width .15s}
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-b);transform:translateY(-100%);transition:transform .35s ease;flex-wrap:wrap;justify-content:center}
+nav.show{transform:translateY(0)}
+nav a{font-size:.78rem;font-weight:700;padding:.35rem .7rem;border-radius:99px;color:var(--tx);transition:all .25s;background:transparent}
+nav a:hover,nav a.active{background:var(--pri);color:var(--wh)}
+/* ===== HERO ===== */
+#hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;background:linear-gradient(160deg,var(--pri-p) 0%,var(--wh) 40%,var(--acc-ll) 70%,var(--pri-p) 100%);background-size:300% 300%;animation:gradShift 12s ease infinite;overflow:hidden}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero-badge{display:inline-block;background:var(--wh);padding:.4rem 1rem;border-radius:99px;font-size:.75rem;font-weight:700;color:var(--pri-d);box-shadow:0 2px 12px var(--sh);margin-bottom:1rem;animation:fadeInDown .8s ease both}
+.hero-mascot{font-size:5rem;animation:float 3s ease-in-out infinite;margin-bottom:.5rem}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.hero-title{font-size:clamp(1.8rem,6vw,3rem);font-weight:900;background:linear-gradient(135deg,var(--pri-d),var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3;animation:fadeInUp .8s ease both .3s;opacity:0}
+.hero-sub{font-size:clamp(.95rem,2.5vw,1.2rem);color:var(--tx-l);margin-top:.8rem;font-weight:500;animation:fadeInUp .8s ease both .5s;opacity:0}
+.hero-scroll{margin-top:2rem;animation:fadeInUp .8s ease both .7s,bounce 2s ease-in-out infinite 1.5s;opacity:0;font-size:1.5rem;color:var(--tx-l)}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(20px)}}
+@keyframes fadeInDown{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(-20px)}}
+/* ===== SECTIONS ===== */
+.section{position:relative;z-index:1;padding:3rem 1.2rem}
+.section:nth-child(odd){background:var(--wh)}
+.section:nth-child(even){background:var(--pri-p)}
+.container{max-width:900px;margin:0 auto}
+.sec-title{font-size:clamp(1.4rem,4vw,1.8rem);font-weight:900;text-align:center;margin-bottom:.5rem;color:var(--tx-d)}
+.sec-sub{text-align:center;color:var(--tx-l);margin-bottom:2rem;font-size:.9rem}
+/* ===== WAVE ===== */
+.wave{position:relative;z-index:2;margin-top:-1px;line-height:0}
+.wave svg{display:block;width:100%}
+.wave-w path{fill:var(--wh)}.wave-b path{fill:var(--pri-p)}
+/* ===== ANIM ON SCROLL ===== */
+.aos{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.aos.vis{opacity:1;transform:translateY(0)}
+/* ===== CARDS ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+.card{background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--glass-b);border-radius:var(--rad);padding:1.4rem;transition:transform .3s,box-shadow .3s;cursor:default;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--pri),var(--acc));border-radius:var(--rad) var(--rad) 0 0;opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 48px var(--sh2)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:2.2rem;margin-bottom:.5rem;display:block}
+.card-title{font-weight:900;font-size:1.05rem;color:var(--tx-d);margin-bottom:.3rem}
+.card-desc{font-size:.85rem;color:var(--tx-l);line-height:1.7}
+/* ===== ACCORDION ===== */
+.acc{border-radius:var(--rad);overflow:hidden;margin-bottom:.7rem;background:var(--wh);border:1px solid rgba(126,184,218,.15);transition:box-shadow .3s}
+.acc:hover{box-shadow:0 4px 20px var(--sh)}
+.acc-head{display:flex;align-items:center;gap:.6rem;padding:1rem 1.2rem;cursor:pointer;user-select:none;-webkit-user-select:none;font-weight:700;font-size:.95rem;color:var(--tx-d);transition:background .2s}
+.acc-head:hover{background:var(--pri-p)}
+.acc-icon{font-size:1.3rem;flex-shrink:0}
+.acc-arrow{margin-left:auto;font-size:.7rem;transition:transform .35s;color:var(--tx-l);flex-shrink:0}
+.acc.open .acc-arrow{transform:rotate(180deg)}
+.acc-tag{font-size:.6rem;padding:.15rem .45rem;border-radius:99px;font-weight:700;flex-shrink:0}
+.tag-free{background:#E8F5E9;color:#388E3C}
+.tag-cost{background:var(--warn-bg);color:#F57F17}
+.tag-danger{background:#FFEBEE;color:#C62828}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),padding .45s}
+.acc.open .acc-body{max-height:2000px}
+.acc-inner{padding:0 1.2rem 1.2rem;font-size:.88rem;color:var(--tx);line-height:1.9}
+.acc-inner code{background:var(--pri-p);padding:.15rem .4rem;border-radius:6px;font-size:.82rem;font-family:'SF Mono',Consolas,monospace;color:var(--pri-d)}
+.acc-inner .example{background:linear-gradient(135deg,var(--pri-p),var(--acc-ll));padding:.8rem 1rem;border-radius:var(--rad-s);margin:.6rem 0;font-size:.82rem;border-left:3px solid var(--pri)}
+.acc-inner .warn{background:var(--warn-bg);padding:.6rem .8rem;border-radius:var(--rad-s);margin:.6rem 0;font-size:.82rem;border-left:3px solid var(--warn-bd)}
+/* ===== SEARCH ===== */
+.search-wrap{position:relative;max-width:400px;margin:0 auto 1.5rem}
+.search-wrap input{width:100%;padding:.7rem 1rem .7rem 2.5rem;border-radius:99px;border:2px solid var(--pri-l);background:var(--wh);font-family:inherit;font-size:.9rem;color:var(--tx);outline:none;transition:border-color .25s,box-shadow .25s}
+.search-wrap input:focus{border-color:var(--pri);box-shadow:0 0 0 4px rgba(126,184,218,.2)}
+.search-wrap::before{content:'🔍';position:absolute;left:.9rem;top:50%;transform:translateY(-50%);font-size:.9rem}
+/* ===== SHORTCUT TABLE ===== */
+.sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
+.sc-item{background:var(--wh);border-radius:var(--rad-s);padding:.8rem 1rem;display:flex;align-items:center;gap:.7rem;border:1px solid rgba(126,184,218,.12)}
+.sc-key{background:linear-gradient(135deg,var(--pri-p),var(--wh));border:1px solid var(--pri-l);padding:.25rem .6rem;border-radius:8px;font-family:'SF Mono',Consolas,monospace;font-size:.78rem;font-weight:700;color:var(--pri-d);white-space:nowrap;box-shadow:0 2px 4px var(--sh)}
+.sc-desc{font-size:.82rem;color:var(--tx)}
+/* ===== TIPS ===== */
+.tip-card{background:linear-gradient(135deg,var(--wh),var(--acc-ll));border-radius:var(--rad);padding:1.2rem;margin-bottom:.8rem;border-left:4px solid var(--acc);font-size:.88rem}
+.tip-card strong{color:var(--tx-d)}
+/* ===== WARN SECTION ===== */
+.warn-box{background:var(--warn-bg);border:2px solid var(--warn-bd);border-radius:var(--rad);padding:1.5rem;margin-bottom:1rem}
+.warn-box h3{color:#F57F17;font-size:1.05rem;margin-bottom:.5rem}
+.warn-box p,.warn-box li{font-size:.88rem;line-height:1.8}
+.warn-box ul{list-style:none;padding-left:0}
+.warn-box li::before{content:'⚠️ ';margin-right:.2rem}
+/* ===== MODE CARDS ===== */
+.mode-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin:1.5rem 0}
+.mode-card{border-radius:var(--rad);padding:1.2rem;text-align:center;border:2px solid transparent;transition:transform .3s,box-shadow .3s}
+.mode-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px var(--sh2)}
+.mode-suggest{background:linear-gradient(135deg,#E8F5E9,#F1F8E9);border-color:#81C784}
+.mode-auto{background:linear-gradient(135deg,var(--warn-bg),#FFF3E0);border-color:var(--warn-bd)}
+.mode-full{background:linear-gradient(135deg,#FFEBEE,#FCE4EC);border-color:#EF9A9A}
+.mode-icon{font-size:2rem;margin-bottom:.4rem}
+.mode-name{font-weight:900;font-size:1rem;margin-bottom:.3rem}
+.mode-desc{font-size:.8rem;line-height:1.6;color:var(--tx)}
+/* ===== FOOTER ===== */
+footer{background:linear-gradient(135deg,var(--pri-d),var(--pri));color:var(--wh);text-align:center;padding:2.5rem 1.5rem;position:relative;z-index:1}
+footer p{font-size:.85rem;opacity:.9;margin-bottom:.3rem}
+footer .made-by{font-size:.75rem;opacity:.7;margin-top:.8rem}
+/* ===== BACK TO TOP ===== */
+#top-btn{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;width:48px;height:48px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--pri),var(--acc));color:var(--wh);font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px var(--sh2);opacity:0;transform:scale(.6);transition:all .35s;display:flex;align-items:center;justify-content:center}
+#top-btn.show{opacity:1;transform:scale(1)}
+#top-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px var(--sh2)}
+/* ===== SPARKLE ===== */
+.sparkle{position:fixed;pointer-events:none;z-index:9998;font-size:.7rem;animation:sparkleFade .8s ease forwards}
+@keyframes sparkleFade{0%{opacity:1;transform:scale(1) translateY(0)}100%{opacity:0;transform:scale(0) translateY(-30px)}}
+/* ===== CONFIRM TEXT ===== */
+.confirm-text{text-align:center;font-weight:900;color:#FF0000;font-size:1.1rem;padding:.5rem;background:var(--wh);position:relative;z-index:1002}
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+.cards{grid-template-columns:1fr}
+.sc-grid{grid-template-columns:1fr}
+.mode-cards{grid-template-columns:1fr}
+nav a{font-size:.7rem;padding:.3rem .5rem}
+.section{padding:2rem 1rem}
+}
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<!-- 反映確認 -->
+<div class="confirm-text">反映確認</div>
+
+<!-- Loading -->
+<div id="loader">
+<div class="loader-bottle">🍼</div>
+<div class="loader-text">おべんきょうノート、ひらいてるでち...</div>
+</div>
+
+<!-- Background bubbles -->
+<div id="bg-wrap"></div>
+
+<!-- Scroll progress -->
+<div id="progress"></div>
+
+<!-- Nav -->
+<nav id="nav">
+<a href="#about">これなに？</a>
+<a href="#features">できること</a>
+<a href="#modes">モード</a>
+<a href="#commands">コマンド</a>
+<a href="#slash">スラッシュ</a>
+<a href="#shortcuts">ショートカット</a>
+<a href="#tips">コツ</a>
+<a href="#money">お金</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+<div class="hero-badge">📖 ばぶちゃん向け おべんきょうガイド</div>
+<div class="hero-mascot">👶</div>
+<h1 class="hero-title">Codex CLI<br>おべんきょうノート</h1>
+<p class="hero-sub">OpenAI の おしゃべりコーディングロボットを<br>ばぶちゃんでもわかるように ぜんぶ教えるでち！</p>
+<div class="hero-scroll">↓</div>
+</section>
+
+<!-- WAVE -->
+<div class="wave wave-b"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+<div class="container">
+<h2 class="sec-title aos">🤔 Codex CLI って何でち？</h2>
+<p class="sec-sub aos">まずは「これが何なのか」から おべんきょうするでち！</p>
+<div class="card aos" style="max-width:700px;margin:0 auto">
+<p style="font-size:.92rem;line-height:2">
+<strong style="font-size:1.1rem;color:var(--pri-d)">Codex CLI（コデックス シーエルアイ）</strong>は、
+OpenAI っていう会社が作った<strong>「おしゃべりできるプログラミングロボット」</strong>でち！<br><br>
+パソコンの<strong>「ターミナル」</strong>っていう まっくろいお部屋の中で動くでち。
+ターミナルはパソコンに文字でお仕事を頼むための場所でち。<br><br>
+「このファイル読んで〜」「ここ直して〜」「このコマンド動かして〜」って おしゃべりするだけで、ぜ〜んぶやってくれるでち！<br><br>
+しかも<strong>オープンソース</strong>（中身が全部公開されてる）で、<strong>Rust</strong>っていう速い言語で作られてるから、サクサク動くでち！
+</p>
+</div>
+<div style="text-align:center;margin-top:1.5rem" class="aos">
+<p style="font-size:.85rem;color:var(--tx-l)">📦 インストール（パソコンに入れる方法）でち</p>
+<div style="display:inline-flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem;justify-content:center">
+<code style="background:var(--pri-p);padding:.4rem .8rem;border-radius:8px;font-size:.82rem">npm install -g @openai/codex</code>
+<code style="background:var(--pri-p);padding:.4rem .8rem;border-radius:8px;font-size:.82rem">brew install --cask codex</code>
+</div>
+<p style="font-size:.75rem;color:var(--tx-l);margin-top:.5rem">GitHub からバイナリ（実行ファイル）をダウンロードもできるでち</p>
+</div>
+</div>
+</section>
+
+<div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- FEATURES -->
+<section id="features" class="section">
+<div class="container">
+<h2 class="sec-title aos">✨ できること一覧でち</h2>
+<p class="sec-sub aos">Codex CLI にお願いできることを ぜんぶ並べたでち！</p>
+<div class="cards">
+
+<div class="card aos">
+<span class="card-icon">📖</span>
+<div class="card-title">ファイルを読む</div>
+<div class="card-desc">パソコンの中のファイルを見てくれるでち！コードも設定ファイルもぜんぶ読めるでち。画像やスクリーンショットも見れるでち！</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">✏️</span>
+<div class="card-title">ファイルを書き換える</div>
+<div class="card-desc">ファイルの中身を直してくれるでち！「ここをこう変えて」って言うだけで、ピンポイントで修正してくれるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">📝</span>
+<div class="card-title">ファイルを新しく作る</div>
+<div class="card-desc">新しいファイルを作ってくれるでち！「index.htmlを作って」って言えば中身も全部書いてくれるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">💻</span>
+<div class="card-title">コマンド実行</div>
+<div class="card-desc">パソコンに直接お仕事を頼んでくれるでち！<code>npm install</code> とか <code>git push</code> とか、ターミナルのコマンドを代わりにやってくれるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🌐</span>
+<div class="card-title">ウェブ検索</div>
+<div class="card-desc">インターネットでしらべものしてくれるでち！最新の情報やドキュメントを調べて教えてくれるでち。キャッシュ（保存した検索結果）も使えるでち！</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🔍</span>
+<div class="card-title">コードを探す</div>
+<div class="card-desc">プロジェクトの中から必要なコードを探してくれるでち！ファイル名でもコードの中身でも検索できるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🌿</span>
+<div class="card-title">Git 操作</div>
+<div class="card-desc">コードの履歴を管理するGit（じっと）を使えるでち！セーブしたり、前の状態に戻したり、みんなに見せたりできるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🖼️</span>
+<div class="card-title">画像を見る</div>
+<div class="card-desc">スクリーンショットやデザインの画像を見せると、それを理解してコードにしてくれるでち！目が見えるロボットでち！</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🤖</span>
+<div class="card-title">マルチエージェント</div>
+<div class="card-desc">むずかしいお仕事は、専門のロボットを何体も同時に呼んでくれるでち！みんなで手分けするから早いでち！（実験的機能でち）</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🔌</span>
+<div class="card-title">MCP（外部ツール連携）</div>
+<div class="card-desc">MCP っていう仕組みで、他のツールとつながれるでち！Codex 自身を MCP サーバーとして他のロボットに使わせることもできるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">💾</span>
+<div class="card-title">セッション再開</div>
+<div class="card-desc">前にお話しした内容を覚えてて、途中から再開できるでち！ <code>codex resume --last</code> で前回の続きからでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">📐</span>
+<div class="card-title">計画モード（Plan）</div>
+<div class="card-desc">大きなお仕事の前に「こうやって進めるよ！」って計画を立ててくれるでち。<code>/plan</code> で切り替えられるでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">☁️</span>
+<div class="card-title">Codex Cloud</div>
+<div class="card-desc">クラウド（インターネット上）でも動くでち！大きなお仕事はクラウドに任せて、結果を <code>codex apply</code> でもらうでち。</div>
+</div>
+
+<div class="card aos">
+<span class="card-icon">🧩</span>
+<div class="card-title">IDE 連携</div>
+<div class="card-desc">VS Code、Cursor、Windsurf などのエディタの中でも使えるでち！ターミナルじゃなくてもOKでち。</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<div class="wave wave-b"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- APPROVAL MODES -->
+<section id="modes" class="section">
+<div class="container">
+<h2 class="sec-title aos">🛡️ 承認モードでち</h2>
+<p class="sec-sub aos">Codex にどこまでお仕事を任せるか、3つのレベルから選べるでち！</p>
+<div class="mode-cards">
+
+<div class="mode-card mode-suggest aos">
+<div class="mode-icon">🟢</div>
+<div class="mode-name">Suggest（おうかがい）</div>
+<div class="mode-desc">
+ぜんぶ聞いてくれるモードでち。<br>
+ファイルを作る時も、直す時も、コマンドを動かす時も、ぜんぶ「いい？」って聞いてくれるでち。<br>
+<strong>初心者のばぶちゃんはこれがおすすめでち！</strong><br>
+<code style="font-size:.72rem">codex --approval-mode suggest</code>
+</div>
+</div>
+
+<div class="mode-card mode-auto aos">
+<div class="mode-icon">🟡</div>
+<div class="mode-name">Auto-Edit（おまかせ編集）</div>
+<div class="mode-desc">
+ファイルの作成・編集は勝手にやるけど、コマンド実行だけは聞いてくれるモードでち。<br>
+ちょっと慣れてきたばぶちゃん向けでち。<br>
+<code style="font-size:.72rem">codex --approval-mode auto-edit</code>
+</div>
+</div>
+
+<div class="mode-card mode-full aos">
+<div class="mode-icon">🔴</div>
+<div class="mode-name">Full-Auto（ぜんぶおまかせ）</div>
+<div class="mode-desc">
+ファイルもコマンドもぜんぶ勝手にやるモードでち。<br>
+<strong>⚠️ 危ないコマンドも勝手に動かしちゃうから注意でち！</strong><br>
+信頼できる環境だけで使うでち。<br>
+<code style="font-size:.72rem">codex --approval-mode full-auto</code>
+</div>
+</div>
+
+</div>
+
+<div class="card aos" style="max-width:600px;margin:1rem auto 0;border-left:3px solid var(--pri)">
+<p style="font-size:.85rem;line-height:1.8"><strong>🏖️ サンドボックス（お砂場）って？</strong><br>
+Codex が触れる範囲を制限する安全装置でち！<br>
+<strong>read-only</strong>：読むだけ ／ <strong>workspace-write</strong>：今のフォルダだけ書ける ／ <strong>danger-full-access</strong>：なんでもできる（危険）<br>
+ふだんは workspace-write で十分でち。</p>
+</div>
+</div>
+</section>
+
+<div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- COMMANDS -->
+<section id="commands" class="section">
+<div class="container">
+<h2 class="sec-title aos">⌨️ ターミナルコマンド大全でち</h2>
+<p class="sec-sub aos">パソコンのターミナルで打つコマンドでち！起動する時に使うやつでち。</p>
+<div class="search-wrap aos"><input type="text" id="cmd-search" placeholder="コマンドを検索するでち..."></div>
+
+<div id="cmd-list">
+
+<div class="acc aos" data-search="codex 起動 対話 チャット interactive">
+<div class="acc-head"><span class="acc-icon">🚀</span> codex<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex を起動するいちばん基本のコマンドでち！</p>
+<p>ターミナルに <code>codex</code> って打つと、おしゃべり画面（TUI）が開くでち。ここでお話しながらお仕事をお願いするでち。</p>
+<div class="example">💡 使い方：<code>codex</code> だけでOK！プロンプト（お願い）を直接渡すこともできるでち → <code>codex "このバグ直して"</code></div>
+<p><strong>よく使うオプション：</strong></p>
+<p>🔹 <code>--model モデル名</code> → 使うAIの頭脳を変えるでち</p>
+<p>🔹 <code>--approval-mode suggest/auto-edit/full-auto</code> → 承認モードを決めるでち</p>
+<p>🔹 <code>--image 画像のパス</code> → 画像を一緒に渡せるでち</p>
+<p>🔹 <code>--path フォルダのパス</code> → 作業するフォルダを指定するでち</p>
+<p>🔹 <code>--json</code> → 結果をJSON（機械が読みやすい形）で出すでち</p>
+<p>🔹 <code>--provider プロバイダ名</code> → AIのプロバイダを変えるでち</p>
+<p>🔹 <code>--profile プロファイル名</code> → 設定のプロファイルを選ぶでち</p>
+<p>🔹 <code>--enable 機能名</code> → 実験的な機能をオンにするでち</p>
+<p>🔹 <code>--writable-root パス</code> → 書き込みOKなフォルダを追加するでち</p>
+<p>🔹 <code>-c key=value</code> → 設定を一時的に変えるでち</p>
+<div class="warn">⚠️ 対話するたびに API（おはなし窓口）を使うので、お金がかかるでち。ChatGPTのプラン（Plus/Pro/Team等）に入ってれば含まれてるでち！</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex exec 非対話 自動 バッチ non-interactive">
+<div class="acc-head"><span class="acc-icon">⚡</span> codex exec<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>おしゃべり画面を開かずに、一発でお仕事を頼むコマンドでち！</p>
+<p>結果はターミナルにそのまま出てくるでち。スクリプトや自動化に便利でち！</p>
+<div class="example">💡 <code>codex exec "テストを実行して結果を教えて"</code><br>エイリアス（別名）：<code>codex e</code> でもOKでち</div>
+<p>パイプ（<code>|</code>）でプロンプトを渡すこともできるでち → <code>echo "バグ直して" | codex exec</code></p>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex resume セッション 再開 続き">
+<div class="acc-head"><span class="acc-icon">🔄</span> codex resume<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>前のおしゃべりの続きから再開するコマンドでち！</p>
+<p>Codex はお話の記録を自動で保存してくれてるから、いつでも戻れるでち。</p>
+<div class="example">💡 <code>codex resume --last</code> → 最後のセッションの続きでち<br>
+<code>codex resume セッションID</code> → 特定のセッションでち</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex apply クラウド 適用 diff">
+<div class="acc-head"><span class="acc-icon">📥</span> codex apply<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex Cloud（クラウド版）で作った変更を、自分のパソコンに取り込むコマンドでち！</p>
+<p>クラウドでやったお仕事の結果（diff）をローカルに適用するでち。</p>
+<div class="example">💡 <code>codex apply</code> または <code>codex a</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex cloud-tasks クラウド タスク 一覧">
+<div class="acc-head"><span class="acc-icon">☁️</span> codex cloud-tasks<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex Cloud のタスク（お仕事）を一覧で見たり実行したりするでち！</p>
+<p>おしゃべり画面を開かなくても、クラウドのお仕事を管理できるでち。</p>
+<div class="example">💡 <code>codex cloud-tasks</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex login ログイン 認証 サインイン">
+<div class="acc-head"><span class="acc-icon">🔑</span> codex login<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex にログインするコマンドでち！</p>
+<p>ブラウザが開いて ChatGPT アカウントでログインできるでち。APIキーでもログインできるでち。</p>
+<div class="example">💡 <code>codex login</code> → ブラウザでログイン<br>
+<code>codex login --device-code</code> → デバイスコードでログイン<br>
+<code>codex login --with-api-key</code> → APIキーでログイン</div>
+<div class="warn">⚠️ APIキーを使う場合は、OpenAI のAPIの料金が別途かかるでち。ChatGPTアカウントでログインするのがおすすめでち！</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex completion 補完 シェル zsh bash fish">
+<div class="acc-head"><span class="acc-icon">📜</span> codex completion<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>ターミナルの補完スクリプトを作ってくれるでち！</p>
+<p>Tab キーで codex のサブコマンドが自動補完されるようになるでち。</p>
+<div class="example">💡 <code>codex completion zsh</code> / <code>codex completion bash</code> / <code>codex completion fish</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex features 機能 有効 無効 トグル feature flag">
+<div class="acc-head"><span class="acc-icon">🧪</span> codex features<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>実験的な機能のオン・オフを管理するコマンドでち！</p>
+<div class="example">💡 <code>codex features list</code> → 機能一覧を見るでち<br>
+<code>codex features enable 機能名</code> → オンにするでち<br>
+<code>codex features disable 機能名</code> → オフにするでち</div>
+<p><strong>主な機能フラグ：</strong></p>
+<p>🔹 <code>shell</code> → シェル（コマンド実行）ツール（デフォルトON）</p>
+<p>🔹 <code>unified_exec</code> → 統合PTY実行ツール（ベータ）</p>
+<p>🔹 <code>bwrap_sandbox</code> → Linuxサンドボックス（実験的）</p>
+<p>🔹 <code>apply_patch_freeform</code> → フリーフォームパッチ（実験的）</p>
+<p>🔹 <code>apps</code> → ChatGPT Apps連携（実験的）</p>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex mcp-server MCP サーバー ツール連携">
+<div class="acc-head"><span class="acc-icon">🔌</span> codex mcp-server<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex を MCP サーバーとして起動するコマンドでち！</p>
+<p>他のMCPクライアント（他のAIツール）から Codex をツールとして使えるようになるでち。すごいでち！</p>
+<div class="example">💡 <code>codex mcp-server</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex execpolicy ポリシー ルール チェック 実行権限">
+<div class="acc-head"><span class="acc-icon">📋</span> codex execpolicy check<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>実行ポリシー（ルールファイル）をチェックするコマンドでち！（プレビュー機能）</p>
+<p>ルールが正しいかどうか保存する前に確認できるでち。</p>
+<div class="example">💡 <code>codex execpolicy check --rules ルールファイル</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="codex desktop アプリ macOS デスクトップ">
+<div class="acc-head"><span class="acc-icon">🖥️</span> codex desktop<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex のデスクトップアプリを起動するコマンドでち！（macOS のみ）</p>
+<div class="example">💡 <code>codex desktop</code> → デスクトップアプリ起動<br><code>codex desktop /path/to/project</code> → 特定のフォルダで開くでち</div>
+</div></div>
+</div>
+
+</div>
+</div>
+</section>
+
+<div class="wave wave-b"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- SLASH COMMANDS -->
+<section id="slash" class="section">
+<div class="container">
+<h2 class="sec-title aos">⚡ スラッシュコマンド大全でち</h2>
+<p class="sec-sub aos">Codex の中で <code>/</code> を打つと使えるコマンドでち！おしゃべり中に設定を変えたりできるでち。</p>
+<div class="search-wrap aos"><input type="text" id="slash-search" placeholder="スラッシュコマンドを検索するでち..."></div>
+
+<div id="slash-list">
+
+<div class="acc aos" data-search="/model モデル 変更 GPT 頭脳">
+<div class="acc-head"><span class="acc-icon">🧠</span> /model<span class="acc-tag tag-cost">モデルで料金変動</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>使うAIモデル（頭脳のレベル）を変えるでち！</p>
+<p>GPT-5.3-Codex（標準）や GPT-5.3-Codex-Spark（軽量・高速）などに切り替えられるでち。推論レベル（どれだけ深く考えるか）も調整できるでち。</p>
+<div class="warn">⚠️ モデルによってAPIの消費量が変わるでち。重いモデルほどお金がかかるでち！</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/plan 計画 プラン モード 設計">
+<div class="acc-head"><span class="acc-icon">📐</span> /plan<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>計画モードに切り替えるでち！</p>
+<p>「こうやって進めるよ！」って計画を立ててから実行してくれるから、大きなお仕事の時に安心でち。</p>
+<div class="example">💡 <code>/plan</code> → 計画モードに入るでち<br><code>/plan この機能の移行計画を立てて</code> → 計画のお題も一緒に渡せるでち</div>
+<p>画像も一緒に貼り付けられるでち。</p>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/permissions 権限 許可 承認 アクセス approvals">
+<div class="acc-head"><span class="acc-icon">🛡️</span> /permissions<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>承認モードを切り替えるでち！</p>
+<p>おしゃべり中でもモードを変えられるから、「やっぱりもっと慎重にして」とか「もっとおまかせで」とか調整できるでち。</p>
+<div class="example">💡 <code>/permissions</code> → モード選択画面が出るでち</div>
+<p>※ <code>/approvals</code> でも同じことができるでち（古い名前でち）。</p>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/status ステータス 状態 確認 情報">
+<div class="acc-head"><span class="acc-icon">📊</span> /status<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>今の状態を確認するでち！</p>
+<p>使ってるモデル、承認モード、書き込みOKなフォルダ、トークン使用量などが一目でわかるでち。</p>
+<div class="example">💡 <code>/status</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/compact 圧縮 まとめ コンテキスト 要約">
+<div class="acc-head"><span class="acc-icon">🗜️</span> /compact<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>長くなったお話を短くまとめてくれるでち！</p>
+<p>会話が長くなるとAIの記憶がいっぱいになるから、大事なところだけ残して圧縮してくれるでち。</p>
+<div class="example">💡 <code>/compact</code></div>
+<div class="warn">⚠️ まとめる時にAPIを使うから、ちょっとだけお金がかかるでち。</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/diff 差分 変更 git ステージ">
+<div class="acc-head"><span class="acc-icon">📝</span> /diff<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Gitの変更内容を見るでち！</p>
+<p>ステージ済みの変更、まだステージしてない変更、新しいファイルを表示してくれるでち。</p>
+<div class="example">💡 <code>/diff</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/review レビュー コードレビュー チェック 確認">
+<div class="acc-head"><span class="acc-icon">🔍</span> /review<span class="acc-tag tag-cost">API使う</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>コードをチェックしてくれるでち！</p>
+<p>変更した部分について、問題がないか、テストが足りてないかなどを確認してくれるでち。</p>
+<div class="example">💡 <code>/review</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/tools ツール MCP 一覧">
+<div class="acc-head"><span class="acc-icon">🔧</span> /tools<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>今使えるMCPツールの一覧を見るでち！</p>
+<p>設定してある外部ツールがちゃんと動いてるか確認できるでち。</p>
+<div class="example">💡 <code>/tools</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/apps アプリ ChatGPT 連携 プラグイン">
+<div class="acc-head"><span class="acc-icon">📱</span> /apps<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>ChatGPT Apps（アプリ連携）を使うでち！（実験的機能）</p>
+<p>アプリを選ぶと <code>$app-slug</code> って形で入力欄に入るでち。</p>
+<div class="example">💡 <code>/apps</code> → アプリ一覧から選ぶでち</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/agent エージェント スレッド マルチ 切替">
+<div class="acc-head"><span class="acc-icon">🤖</span> /agent<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>マルチエージェント使用中に、別のエージェント（ロボット）の作業を見に行くでち！</p>
+<p>スレッド（お話の流れ）を切り替えて、各ロボットの進捗を確認できるでち。</p>
+<div class="example">💡 <code>/agent</code> → スレッド選択画面でち</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/terminals ターミナル バックグラウンド 裏側">
+<div class="acc-head"><span class="acc-icon">🖥️</span> /terminals<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>バックグラウンド（裏側）で動いてるターミナルの一覧を見るでち！</p>
+<p>unified_exec 機能を使ってる時に、裏で動いてるコマンドの状態がわかるでち。</p>
+<div class="example">💡 <code>/terminals</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/experimental 実験 experimental 機能 トグル">
+<div class="acc-head"><span class="acc-icon">🧪</span> /experimental<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>実験的な機能のオン・オフを切り替えるでち！</p>
+<p>マルチエージェントとかの新機能をここでオンにできるでち。変更は config に保存されて、次回起動時に反映されるでち。</p>
+<div class="example">💡 <code>/experimental</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/statusline ステータスライン 表示 カスタマイズ UI">
+<div class="acc-head"><span class="acc-icon">📊</span> /statusline<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>画面下のステータスバーに何を表示するかカスタマイズするでち！</p>
+<p>モデル名、トークン数、Gitブランチ、セッションIDなどを表示・非表示にできるでち。</p>
+<div class="example">💡 <code>/statusline</code> → 表示項目を選ぶ画面でち</div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/debug-config デバッグ 設定 確認 レイヤー">
+<div class="acc-head"><span class="acc-icon">🔬</span> /debug-config<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>設定がどう適用されてるか詳しく見るでち！</p>
+<p>「なんで設定が反映されないの？」って時に、設定の優先順位を調べられるでち。上級者向けでち。</p>
+<div class="example">💡 <code>/debug-config</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/feedback フィードバック 報告 バグ 改善">
+<div class="acc-head"><span class="acc-icon">💬</span> /feedback<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>開発チームにフィードバック（感想や問題報告）を送るでち！</p>
+<p>ログ（記録）や診断情報も一緒に送れるでち。</p>
+<div class="example">💡 <code>/feedback</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/logout ログアウト 切断">
+<div class="acc-head"><span class="acc-icon">🚪</span> /logout<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>ログアウトするでち！ローカルの認証情報を消すでち。</p>
+<div class="example">💡 <code>/logout</code></div>
+</div></div>
+</div>
+
+<div class="acc aos" data-search="/quit /exit 終了 閉じる やめる">
+<div class="acc-head"><span class="acc-icon">👋</span> /quit ・ /exit<span class="acc-tag tag-free">無料</span><span class="acc-arrow">▼</span></div>
+<div class="acc-body"><div class="acc-inner">
+<p>Codex を終了するでち！どっちでもOKでち。</p>
+<div class="example">💡 <code>/quit</code> または <code>/exit</code></div>
+</div></div>
+</div>
+
+</div>
+
+<div class="card aos" style="max-width:600px;margin:1.5rem auto 0;border-left:3px solid var(--acc)">
+<p style="font-size:.85rem;line-height:1.8"><strong>🎨 カスタムスラッシュコマンド</strong><br>
+自分だけのスラッシュコマンドも作れるでち！Markdown ファイル（.mdファイル）を特定のフォルダに置くと、起動時に自動で読み込んでくれるでち。よく使うお願いをコマンド化できて便利でち！</p>
+</div>
+</div>
+</section>
+
+<div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- SHORTCUTS -->
+<section id="shortcuts" class="section">
+<div class="container">
+<h2 class="sec-title aos">⌨️ キーボードショートカットでち</h2>
+<p class="sec-sub aos">おしゃべり画面の中で使えるキーの組み合わせでち！</p>
+<div class="sc-grid">
+<div class="sc-item aos"><span class="sc-key">Ctrl + C</span><span class="sc-desc">今の作業をやめるでち</span></div>
+<div class="sc-item aos"><span class="sc-key">Ctrl + G</span><span class="sc-desc">エディタを開いて長文を書くでち</span></div>
+<div class="sc-item aos"><span class="sc-key">Escape</span><span class="sc-desc">入力をキャンセルでち</span></div>
+<div class="sc-item aos"><span class="sc-key">↑ ↓</span><span class="sc-desc">前のお話を出すでち</span></div>
+<div class="sc-item aos"><span class="sc-key">Tab</span><span class="sc-desc">候補を出すでち</span></div>
+<div class="sc-item aos"><span class="sc-key">/</span><span class="sc-desc">スラッシュコマンドを出すでち</span></div>
+</div>
+</div>
+</section>
+
+<div class="wave wave-b"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- TIPS -->
+<section id="tips" class="section">
+<div class="container">
+<h2 class="sec-title aos">💡 上手に使うコツでち</h2>
+<p class="sec-sub aos">ばぶちゃんが Codex マスターになるためのヒントでち！</p>
+
+<div class="tip-card aos"><strong>🟢 まずは Suggest モードで始めるでち！</strong><br>全部確認してから実行するから安心でち。慣れたら Auto-Edit に上げてみるでち。</div>
+
+<div class="tip-card aos"><strong>📝 config.toml で自分好みにするでち！</strong><br><code>~/.codex/config.toml</code> にルールを書いておくと、毎回設定しなくて済むでち。プロジェクトごとに <code>.codex/config.toml</code> も作れるでち。</div>
+
+<div class="tip-card aos"><strong>🔄 セッション再開を活用するでち！</strong><br><code>codex resume --last</code> で前回の続きから始められるでち。お話の流れを忘れないから効率アップでち。</div>
+
+<div class="tip-card aos"><strong>🖼️ スクショを活用するでち！</strong><br>「こういうデザインにして」ってスクショを渡すと、見た目を理解してコードにしてくれるでち。<code>--image</code> フラグか、おしゃべり中に貼り付けるでち。</div>
+
+<div class="tip-card aos"><strong>📐 大きな仕事は /plan から始めるでち！</strong><br>いきなりコードを書かずに、まず計画を立ててもらうでち。「こうする予定だよ！」って見せてくれるから安心でち。</div>
+
+<div class="tip-card aos"><strong>🇯🇵 日本語でお話しても大丈夫でち！</strong><br>英語がわからなくても、日本語でお願いすればちゃんと理解してくれるでち。「ばぶちゃんでもわかるように教えて」でOKでち。</div>
+</div>
+</section>
+
+<div class="wave wave-w"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,0 720,80 1440,40 L1440,80 L0,80Z"/></svg></div>
+
+<!-- MONEY WARNING -->
+<section id="money" class="section">
+<div class="container">
+<h2 class="sec-title aos">💰 お金のおはなしでち</h2>
+<p class="sec-sub aos">いちばん大事！お金がかかるところをしっかり理解するでち。</p>
+
+<div class="warn-box aos">
+<h3>🍼 ばぶちゃんが知っておくべきこと</h3>
+<ul>
+<li>Codex CLI を使うには <strong>ChatGPT のプラン（Plus / Pro / Team / Edu / Enterprise）</strong>に入ってる必要があるでち</li>
+<li><strong>ChatGPT Plus</strong> は月額 $20（約3,000円）でち</li>
+<li>プランに入ってれば Codex CLI の基本利用は<strong>プランに含まれてる</strong>でち</li>
+<li><strong>API キーで使う場合は別料金</strong>でち。使った分だけお金がかかるでち（従量課金）</li>
+<li><strong>/model で重いモデルに変えると</strong>、トークン消費が増える＝お金が増えるでち</li>
+<li><strong>ウェブ検索</strong>もトークンを使うでち</li>
+<li>お金が心配な時は <code>/status</code> でトークン使用量をチェックするでち</li>
+</ul>
+</div>
+
+<div class="card aos" style="max-width:600px;margin:0 auto;background:linear-gradient(135deg,#E8F5E9,#F1F8E9);border:2px solid #81C784">
+<p style="font-size:.9rem;line-height:1.9;text-align:center">
+<strong style="font-size:1.1rem">🌟 お金をなるべく使わないコツでち</strong><br>
+✅ ChatGPT のプランでログインするでち（APIキーより安定）<br>
+✅ 軽いモデル（Spark）を使うでち<br>
+✅ <code>/compact</code> でこまめに会話を圧縮するでち<br>
+✅ 必要ない時はウェブ検索を避けるでち<br>
+✅ Suggest モードで無駄な実行を防ぐでち
+</p>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<p style="font-size:1.3rem">🍼👶✨</p>
+<p><strong>Codex おべんきょうノート</strong></p>
+<p>ばぶちゃんの Codex マスターへの道は始まったばかりでち！</p>
+<p class="made-by">🤖 このページは <strong>Claude Code</strong>（Anthropic）が作りました</p>
+<p class="made-by" style="font-size:.65rem;margin-top:.2rem">Powered by Claude Opus 4.6 ・ Built with love for ばぶちゃん</p>
+</footer>
+
+<!-- Back to top -->
+<button id="top-btn" aria-label="トップへ戻る">↑</button>
+
+<script>
+// === Loading ===
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hide')},800)});
+
+// === Bubbles ===
+(function(){
+const w=document.getElementById('bg-wrap');
+const n=18;
+for(let i=0;i<n;i++){
+const b=document.createElement('div');b.className='bubble';
+const s=Math.random()*40+10;
+b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:-${s}px;animation:rise ${Math.random()*12+10}s linear ${Math.random()*10}s infinite`;
+w.appendChild(b);
+}
+})();
+
+// === Scroll animations ===
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.aos').forEach(el=>io.observe(el));
+
+// === Accordion ===
+document.querySelectorAll('.acc-head').forEach(h=>{
+h.addEventListener('click',()=>{
+const a=h.parentElement;
+const wasOpen=a.classList.contains('open');
+// close all in same section
+a.closest('section').querySelectorAll('.acc.open').forEach(o=>{if(o!==a)o.classList.remove('open')});
+a.classList.toggle('open',!wasOpen);
+})
+});
+
+// === Search ===
+function setupSearch(inputId,listId){
+const inp=document.getElementById(inputId);
+if(!inp)return;
+const list=document.getElementById(listId);
+inp.addEventListener('input',()=>{
+const q=inp.value.toLowerCase();
+list.querySelectorAll('.acc').forEach(a=>{
+const txt=(a.dataset.search||'')+' '+a.textContent.toLowerCase();
+a.style.display=txt.includes(q)?'':'none';
+})
+})
+}
+setupSearch('cmd-search','cmd-list');
+setupSearch('slash-search','slash-list');
+
+// === Progress bar ===
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+const h=document.documentElement;
+const pct=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+prog.style.width=pct+'%';
+},{passive:true});
+
+// === Nav show/hide ===
+const nav=document.getElementById('nav');
+let lastY=0;
+window.addEventListener('scroll',()=>{
+const y=window.scrollY;
+nav.classList.toggle('show',y>300);
+lastY=y;
+},{passive:true});
+
+// active nav
+const sections=document.querySelectorAll('.section[id]');
+const navLinks=nav.querySelectorAll('a');
+const navIO=new IntersectionObserver(es=>{
+es.forEach(e=>{
+if(e.isIntersecting){
+navLinks.forEach(l=>l.classList.remove('active'));
+const link=nav.querySelector(`a[href="#${e.target.id}"]`);
+if(link)link.classList.add('active');
+}
+})
+},{threshold:.3});
+sections.forEach(s=>navIO.observe(s));
+
+// === Back to top ===
+const topBtn=document.getElementById('top-btn');
+window.addEventListener('scroll',()=>{topBtn.classList.toggle('show',window.scrollY>600)},{passive:true});
+topBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
+
+// === Click sparkle ===
+document.addEventListener('click',e=>{
+for(let i=0;i<3;i++){
+const s=document.createElement('div');s.className='sparkle';
+s.textContent=['✨','⭐','💫'][Math.floor(Math.random()*3)];
+s.style.left=(e.clientX+Math.random()*20-10)+'px';
+s.style.top=(e.clientY+Math.random()*20-10)+'px';
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),800);
+}
+});
+</script>
+</body>
+</html>
